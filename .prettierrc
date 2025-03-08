@@ -1,3 +1,4 @@
 {
-  "Quote": true
+  "Quote": true,
+  "endOfLine": "lf"
 }
