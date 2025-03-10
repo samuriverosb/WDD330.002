@@ -1,12 +1,25 @@
-import { getLocalStorage } from "./utils.mjs";
+import { getLocalStorage, setLocalStorage } from "./utils.mjs";
+
+function deleteFromCartHandler(e) {// Pull the index of the item to be removed
+  console.log(`Deleting item at index: ${itemIndex}`);
+  const currentCart = getLocalStorage("so-cart"); 
+  currentCart.splice(itemIndex, 1); 
+  setLocalStorage("so-cart", currentCart); 
+  renderCartContents(); 
+}
 
 function renderCartContents() {
   const cartItems = getLocalStorage("so-cart");
-  const htmlItems = cartItems.map((item) => cartItemTemplate(item));
+  const htmlItems = cartItems.map((item, index) => cartItemTemplate(item, index));
   document.querySelector(".product-list").innerHTML = htmlItems.join("");
+
+  document.querySelectorAll(".delete-button").forEach((button) => {
+    console.log(`Attaching event listener to delete button with index: ${button.dataset.index}`); // Debugging: Log the button index
+    button.addEventListener("click", deleteFromCartHandler);
+  });
 }
 
-function cartItemTemplate(item) {
+function cartItemTemplate(item, index) {
   const newItem = `<li class="cart-card divider">
   <a href="#" class="cart-card__image">
     <img
@@ -20,8 +33,10 @@ function cartItemTemplate(item) {
   <p class="cart-card__color">${item.Colors[0].ColorName}</p>
   <p class="cart-card__quantity">qty: 1</p>
   <p class="cart-card__price">$${item.FinalPrice}</p>
+  <span class="delete-button" data-index="${index}" style="color: red; cursor: pointer;">X</span>
 </li>`;
 
+  console.log(`Rendering item with index: ${index}`);
   return newItem;
 }
 
