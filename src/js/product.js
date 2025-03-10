@@ -8,10 +8,12 @@ const getCurrentCart = () => Array.isArray(getLocalStorage("so-cart")) ? getLoca
 function addProductToCart(product) {
   setLocalStorage("so-cart", [...getCurrentCart(), product]);
 }
+
 // add to cart button event handler
 async function addToCartHandler(e) {
   const product = await dataSource.findProductById(e.target.dataset.id);
   addProductToCart(product);
+  alert("Product added to cart!");
 }
 
 // add listener to Add to Cart button
