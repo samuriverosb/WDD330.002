@@ -7,6 +7,7 @@ const getCurrentCart = () => Array.isArray(getLocalStorage("so-cart")) ? getLoca
 
 function addProductToCart(product) {
   setLocalStorage("so-cart", [...getCurrentCart(), product]);
+  alert("Product added to cart");
 }
 
 // add to cart button event handler
