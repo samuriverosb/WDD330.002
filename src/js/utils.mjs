@@ -26,3 +26,12 @@ export const getParam = (param) => {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get(param);
 }
+
+export const renderListWithTemplate = (templateFunction, parentElement, list, position="afterbegin", clear=false) => {
+  if (clear) {
+    parentElement.innerHTML = "";
+  }
+  list.forEach(element => {
+    parentElement.innerHTML += templateFunction(element);
+  });
+}
