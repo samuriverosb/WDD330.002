@@ -202,6 +202,48 @@ button {
   grid-column: 3;
 }
 
+/* Add customizable alert to index.html */
+.alert-list {
+  padding: 10px;
+  margin: 20px 0;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.alert-container {
+  display: flex;
+  padding: 0 10px;
+  border-radius: 5px;
+  font-weight: bold;
+  background-color: gray;
+}
+
+.alert-container p {
+  flex-grow: 1;
+}
+
+.close-alert {
+  background: none;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  color: white;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.close-alert:hover {
+  background-color: red;
+  border-radius: 3px;
+}
+
 @media screen and (min-width: 500px) {
   body {
     max-width: 1080px;
