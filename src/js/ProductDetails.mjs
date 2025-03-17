@@ -26,20 +26,27 @@ export default class ProductDetails {
     this.product = {};
     this.dataSource = dataSource;
   }
-  
+
   async init() {
     this.product = await this.dataSource.findProductById(this.productId);
     this.renderProductDetails("main");
-    document.getElementById("addToCart").addEventListener("click", this.addProductToCart.bind(this));
+    document
+      .getElementById("addToCart")
+      .addEventListener("click", this.addProductToCart.bind(this));
   }
 
   addProductToCart() {
-    const getCurrentCart = () => Array.isArray(getLocalStorage("so-cart")) ? getLocalStorage("so-cart") : [];
+    const getCurrentCart = () =>
+      Array.isArray(getLocalStorage("so-cart"))
+        ? getLocalStorage("so-cart")
+        : [];
     setLocalStorage("so-cart", [...getCurrentCart(), this.product]);
     alert("Product added to cart!");
   }
 
   renderProductDetails(selector) {
-    document.querySelector(selector).insertAdjacentHTML("afterbegin", detailsTemplate(this.product));
+    document
+      .querySelector(selector)
+      .insertAdjacentHTML("afterbegin", detailsTemplate(this.product));
   }
 }

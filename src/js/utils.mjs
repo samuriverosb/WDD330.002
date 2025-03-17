@@ -15,23 +15,29 @@ export function setLocalStorage(key, data) {
 }
 // set a listener for both touchend and click
 export function setClick(selector, callback) {
-  qs(selector).addEventListener('touchend', (event) => {
+  qs(selector).addEventListener("touchend", (event) => {
     event.preventDefault();
     callback();
   });
-  qs(selector).addEventListener('click', callback);
+  qs(selector).addEventListener("click", callback);
 }
 
 export const getParam = (param) => {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get(param);
-}
+};
 
-export const renderListWithTemplate = (templateFunction, parentElement, list, position="afterbegin", clear=false) => {
+export const renderListWithTemplate = (
+  templateFunction,
+  parentElement,
+  list,
+  position = "afterbegin",
+  clear = false,
+) => {
   if (clear) {
     parentElement.innerHTML = "";
   }
-  list.forEach(element => {
+  list.forEach((element) => {
     parentElement.innerHTML += templateFunction(element);
   });
-}
+};
