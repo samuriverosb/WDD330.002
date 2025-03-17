@@ -9,19 +9,19 @@ const productList = new ProductList("Tents", productData, listElement);
 productList.init();
 
 async function loadAlerts() {
-    try {
-        const response = await fetch("./json/alerts.json");
-        if (!response.ok) {
-            throw new Error(`Error in loading JSON: ${response.status}`);
-        }
-
-        const alerts = await response.json();
-
-        const alertInstance = new Alert(alerts);
-        alertInstance.createAlert();
-    } catch (error) {
-        console.error("Alerts error:", error);
+  try {
+    const response = await fetch("./json/alerts.json");
+    if (!response.ok) {
+      throw new Error(`Error in loading JSON: ${response.status}`);
     }
+
+    const alerts = await response.json();
+
+    const alertInstance = new Alert(alerts);
+    alertInstance.createAlert();
+  } catch (error) {
+    console.error("Alerts error:", error);
+  }
 }
 
 loadAlerts();
