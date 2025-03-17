@@ -1,0 +1,12 @@
+[
+  {
+    "message": "Alert test! ⚠️",
+    "background": "darkblue",
+    "color": "white"
+  },
+  {
+    "message": "Limited promotion! ✨",
+    "background": "green",
+    "color": "white"
+  }
+]
