@@ -266,3 +266,27 @@ footer {
 .hide {
   display: none;
 }
+
+.category-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--main-color);
+}
+
+.categories img {
+  width: 60px;
+  height: 60px;
+}
+
+.categories {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin-top: 3rem;
+}

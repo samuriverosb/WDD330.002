@@ -6,7 +6,7 @@ const detailsTemplate = (product) => `
         <h2 class="divider">${product.NameWithoutBrand}</h2>
         <img
           class="divider"
-          src="${product.Image}"
+          src="${product.Images.PrimaryLarge}"
           alt="${product.NameWithoutBrand}"
         />
         <p class="product-card__price">$${product.FinalPrice}</p>
@@ -27,7 +27,7 @@ export default class ProductDetails {
     this.dataSource = dataSource;
   }
 
-  async init() {
+  init = async () => {
     this.product = await this.dataSource.findProductById(this.productId);
     this.renderProductDetails("main");
     document
