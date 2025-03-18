@@ -1,19 +1,27 @@
 import ProductData from "./ProductData.mjs";
 import { renderListWithTemplate } from "./utils.mjs";
 
-const productCardTemplate = (product) => `
+const productCardTemplate = (product) => {
+  let imagePath = product.Image;
+
+  if (!imagePath && product.Images && product.Images.PrimaryLarge) {
+    imagePath = product.Images.PrimaryLarge;
+  }
+
+  return `
   <li class="product-card">
     <a href="product_pages/?product=${product.Id}">
       <img
-        src="${product.Image}"
+        src="${imagePath}"
         alt="${product.NameWithoutBrand}"
       />
       <h3 class="card__brand">${product.Brand.Name}</h3>
       <h2 class="card__name">${product.NameWithoutBrand}</h2>
-      <p class="product-card__price">$${product.FinalPrice}</p></a
+      <p class="product-card__price">${product.FinalPrice}</p></a
     >
   </li>
 `;
+};
 
 export default class Search {
   constructor() {
@@ -30,7 +38,6 @@ export default class Search {
 
     const query = document.getElementById("search-input").value.toLowerCase();
 
-    // Redirect to the search results page with the query parameter
     window.location.href = `/search/index.html?query=${encodeURIComponent(query)}`;
   }
 
@@ -43,40 +50,30 @@ export default class Search {
     }
 
     try {
-      // We need to search all categories
-      const categories = ["tents", "backpacks", "sleeping-bags", "hammocks"];
-      let allProducts = [];
+      const categories = ["tents", "backpacks", "sleeping-bags"];
+      let allResults = [];
 
-      // Get products from all categories
       for (const category of categories) {
         const dataSource = new ProductData(category);
-        const products = await dataSource.getData();
-        allProducts = allProducts.concat(products);
+        try {
+          const categoryResults = await dataSource.searchProducts(query);
+          allResults = allResults.concat(categoryResults);
+        } catch (err) {
+          console.warn(`Could not search ${category}:`, err);
+        }
       }
 
-      // Filter products based on search query
-      const searchResults = allProducts.filter(product => {
-        const name = product.Name.toLowerCase();
-        const nameWithoutBrand = product.NameWithoutBrand.toLowerCase();
-        const description = product.DescriptionHtmlSimple?.toLowerCase() || "";
-
-        return (
-          name.includes(query.toLowerCase()) ||
-          nameWithoutBrand.includes(query.toLowerCase()) ||
-          description.includes(query.toLowerCase())
-        );
-      });
-
       // Display results or no results message
-      if (searchResults.length > 0) {
+      if (allResults.length > 0) {
         renderListWithTemplate(
           productCardTemplate,
           resultsContainer,
-          searchResults,
+          allResults,
           "afterbegin",
-          true
+          true,
         );
-        document.getElementById("results-count").textContent = searchResults.length;
+        document.getElementById("results-count").textContent =
+          allResults.length;
       } else {
         resultsContainer.innerHTML = `<p class="no-results">No products found matching "${query}"</p>`;
         document.getElementById("results-count").textContent = 0;
