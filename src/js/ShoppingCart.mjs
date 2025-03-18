@@ -1,4 +1,4 @@
-import { getLocalStorage, setLocalStorage } from "./utils.mjs";
+import { getLocalStorage, loadHeaderFooter, setLocalStorage } from "./utils.mjs";
 
 const cartItemTemplate = (item, index) => {
   const newItem = `<li class="cart-card divider">
@@ -37,6 +37,9 @@ export default class ShoppingCart {
         const currentCart = getLocalStorage("so-cart");
         currentCart.splice(itemIndex, 1);
         setLocalStorage("so-cart", currentCart);
+        let totalItemsInCart = getLocalStorage("totalItemsInCart") == undefined ? parseInt(getLocalStorage("totalItemsInCart")) : cartElements.length;
+        setLocalStorage("totalItemsInCart", totalItemsInCart - 1);
+        loadHeaderFooter();
         this.renderCartElements();
       });
     });

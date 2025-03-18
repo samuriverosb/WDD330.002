@@ -1,4 +1,4 @@
-import { setLocalStorage, getLocalStorage } from "./utils.mjs";
+import { setLocalStorage, getLocalStorage, loadHeaderFooter } from "./utils.mjs";
 
 const detailsTemplate = (product) => `
   <section class="product-detail">
@@ -41,7 +41,10 @@ export default class ProductDetails {
         ? getLocalStorage("so-cart")
         : [];
     setLocalStorage("so-cart", [...getCurrentCart(), this.product]);
+    let totalItemsInCart = getLocalStorage("totalItemsInCart") == undefined ? parseInt(getLocalStorage("totalItemsInCart")) : getCurrentCart().length;
+    setLocalStorage("totalItemsInCart", totalItemsInCart + 1);
     alert("Product added to cart!");
+    loadHeaderFooter();
   }
 
   renderProductDetails(selector) {

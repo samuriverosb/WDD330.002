@@ -69,4 +69,11 @@ export const loadHeaderFooter = async () => {
   const footer = await loadTemplate("../partials/footer.html");
   renderWithTemplate(header, document.querySelector("#main-header"));
   renderWithTemplate(footer, document.querySelector("#main-footer"));
+  document.getElementById("totalItemsInCart").innerText = getLocalStorage("totalItemsInCart") == undefined
+    ?
+    parseInt(getLocalStorage("totalItemsInCart"))
+    :
+    (Array.isArray(getLocalStorage("so-cart"))
+      ? getLocalStorage("so-cart")
+      : []).length;
 }
