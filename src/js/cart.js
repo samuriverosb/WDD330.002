@@ -14,7 +14,7 @@ function deleteFromCartHandler(e) {
 function renderCartContents() {
   const cartItems = getLocalStorage("so-cart") || [];
 
-  if (cartItems.length === 0 ) {
+  if (cartItems.length === 0) {
     alert("Your cart is empty.");
     return;
   }
