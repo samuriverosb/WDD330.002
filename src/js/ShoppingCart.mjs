@@ -1,7 +1,7 @@
-import { getLocalStorage, loadHeaderFooter, setLocalStorage } from "./utils.mjs";
+import { getLocalStorage, setLocalStorage } from "./utils.mjs";
 
 const cartItemTemplate = (item, index) => {
-  const newItem = `<li class="cart-card divider">
+  return `<li class="cart-card divider">
     <a href="#" class="cart-card__image">
       <img
         src="${item.Images.PrimarySmall}"
@@ -12,13 +12,11 @@ const cartItemTemplate = (item, index) => {
       <h2 class="card__name">${item.Name}</h2>
     </a>
     <p class="cart-card__color">${item.Colors[0].ColorName}</p>
-    <p class="cart-card__quantity">qty: 1</p>
+    <p class="cart-card__quantity">qty: ${item.Quantity}</p>
     <p class="cart-card__price">$${item.FinalPrice}</p>
     <span class="delete-button" data-index="${index}" style="color: red; cursor: pointer;">X</span>
   </li>`;
-
-  return newItem;
-}
+};
 
 export default class ShoppingCart {
   constructor(key, parentSelector) {
@@ -30,23 +28,42 @@ export default class ShoppingCart {
     const cartElements = getLocalStorage(this.key) || [];
     const htmlElements = cartElements.map((element, index) => cartItemTemplate(element, index));
     document.querySelector(this.parentSelector).innerHTML = htmlElements.join("");
+
     document.querySelectorAll(".delete-button").forEach((button) => {
       button.addEventListener("click", (e) => {
         const itemIndex = e.target.dataset.index;
 
-        const currentCart = getLocalStorage("so-cart");
-        currentCart.splice(itemIndex, 1);
-        setLocalStorage("so-cart", currentCart);
-        let totalItemsInCart = getLocalStorage("totalItemsInCart") == undefined ? parseInt(getLocalStorage("totalItemsInCart")) : cartElements.length;
-        setLocalStorage("totalItemsInCart", totalItemsInCart - 1);
-        loadHeaderFooter();
-        this.renderCartElements();
+        const currentCart = getLocalStorage(this.key);
+        currentCart.splice(itemIndex, 1); // Remove the item
+        setLocalStorage(this.key, currentCart); // Update local storage
+        this.renderCartElements(); // Re-render the cart
       });
     });
 
     if (cartElements.length === 0) {
       alert("Your cart is empty.");
-      return;
     }
-  }
+  };
+
+  addToCart = (item) => {
+    const currentCart = getLocalStorage(this.key) || [];
+
+    // Check if the item is already in the cart
+    const existingItem = currentCart.find((cartItem) => cartItem.Id === item.Id);
+
+    if (existingItem) {
+      // If the item exists, increment the quantity
+      existingItem.Quantity += 1;
+    } else {
+      // If the item does not exist, add it to the cart with a quantity of 1
+      item.Quantity = 1;
+      currentCart.push(item);
+    }
+
+    // Save the updated cart to local storage
+    setLocalStorage(this.key, currentCart);
+
+    // Re-render the cart
+    this.renderCartElements();
+  };
 }
