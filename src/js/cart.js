@@ -1,3 +1,10 @@
+import ShoppingCart from "./ShoppingCart.mjs";
+import { loadHeaderFooter } from "./utils.mjs";
+
+loadHeaderFooter();
+
+const shoppingCart = new ShoppingCart("so-cart", ".product-list");
+shoppingCart.renderCartElements();
 import { getLocalStorage, setLocalStorage } from "./utils.mjs";
 
 function deleteFromCartHandler(e) {

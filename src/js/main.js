@@ -1,12 +1,5 @@
-import ProductData from "./ProductData.mjs";
-import ProductList from "./ProductList.mjs";
 import Alert from "./Alert.js";
-
-const productData = new ProductData("tents");
-const listElement = document.querySelector(".product-list");
-const productList = new ProductList("Tents", productData, listElement);
-
-productList.init();
+import { loadHeaderFooter } from "./utils.mjs";
 
 async function loadAlerts() {
   try {
@@ -24,4 +17,5 @@ async function loadAlerts() {
   }
 }
 
+loadHeaderFooter();
 loadAlerts();
