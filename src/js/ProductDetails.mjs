@@ -1,4 +1,4 @@
-import { setLocalStorage, getLocalStorage } from "./utils.mjs";
+import { setLocalStorage, getLocalStorage, loadHeaderFooter } from "./utils.mjs";
 
 const detailsTemplate = (product) => `
   <section class="product-detail">
@@ -6,7 +6,7 @@ const detailsTemplate = (product) => `
         <h2 class="divider">${product.NameWithoutBrand}</h2>
         <img
           class="divider"
-          src="${product.Image}"
+          src="${product.Images.PrimaryLarge}"
           alt="${product.NameWithoutBrand}"
         />
         <p class="product-card__price">$${product.FinalPrice}</p>
@@ -27,7 +27,7 @@ export default class ProductDetails {
     this.dataSource = dataSource;
   }
 
-  async init() {
+  init = async () => {
     this.product = await this.dataSource.findProductById(this.productId);
     this.renderProductDetails("main");
     document
@@ -41,7 +41,10 @@ export default class ProductDetails {
         ? getLocalStorage("so-cart")
         : [];
     setLocalStorage("so-cart", [...getCurrentCart(), this.product]);
+    let totalItemsInCart = getLocalStorage("totalItemsInCart") == undefined ? parseInt(getLocalStorage("totalItemsInCart")) : getCurrentCart().length;
+    setLocalStorage("totalItemsInCart", totalItemsInCart + 1);
     alert("Product added to cart!");
+    loadHeaderFooter();
   }
 
   renderProductDetails(selector) {
