@@ -11,3 +11,4 @@ const productList = new ProductList(category, dataSource, listElement);
 
 productList.init();
 document.getElementById("category-title").innerText = category;
+// const list = await this.dataSource.getData(this.category);
