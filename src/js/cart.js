@@ -12,7 +12,13 @@ function deleteFromCartHandler(e) {
 }
 
 function renderCartContents() {
-  const cartItems = getLocalStorage("so-cart");
+  const cartItems = getLocalStorage("so-cart") || [];
+
+  if (cartItems.length === 0) {
+    alert("Your cart is empty.");
+    return;
+  }
+
   const htmlItems = cartItems.map((item, index) =>
     cartItemTemplate(item, index),
   );
