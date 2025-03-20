@@ -1,27 +1,28 @@
-const baseURL = import.meta.env.VITE_SERVER_URL
+const baseURL = import.meta.env.VITE_SERVER_URL;
+
+function convertToJson(res) {
+  if (res.ok) {
+    return res.json();
+  } else {
+    throw new Error("Bad Response");
+  }
+}
 
 export default class ProductData {
   constructor() {
-    this.baseURL = baseURL; // Base URL for fetching data from the API
+    // this.category = category;
+    // this.path = `../public/json/${this.category}.json`;
   }
-
   async getData(category) {
-    const response = await fetch(`${baseURL}products/search/${category} `);
+    const response = await fetch(`${baseURL}products/search/${category}`);
     const data = await convertToJson(response);
+    
     return data.Result;
   }
-
-  async findProductById(productId) {
-    try {
-      const response = await fetch(`${this.baseURL}product/${productId}`);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch product with ID: ${productId}`);
-      }
-      const product = await response.json();
-      return product;
-    } catch (error) {
-      console.error("Error finding product by ID:", error);
-      return null; // Return null if the fetch fails
-    }
+  async findProductById(id) {
+    const response = await fetch(`${baseURL}product/${id}`);
+    const data = await convertToJson(response);
+    console.log(data.Result);
+    return data.Result;
   }
 }

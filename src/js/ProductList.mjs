@@ -1,28 +1,38 @@
-import { renderListWithTemplate, productCardTemplate } from "./utils.mjs";
+import { renderListWithTemplate } from "./utils.mjs";
+
+function productCardTemplate(product) {
+  return `
+    <li class="product-card">
+      <a href="/product_pages/?product=${product.Id}">
+        <img src="${product.Images.PrimaryMedium}" alt="${product.Name}">
+        <h3>${product.Brand.Name}</h3>
+        <p>${product.NameWithoutBrand}</p>
+        <p class="product-card__price">$${product.FinalPrice}</p>
+      </a>
+    </li>
+    `;
+}
 
 export default class ProductList {
   constructor(category, dataSource, listElement) {
-    this.category = category; // The category to display (e.g., "tents")
-    this.dataSource = dataSource; // The data source for fetching products
-    this.listElement = listElement; // The DOM element where the list will be rendered
+    this.category = category;
+    this.dataSource = dataSource;
+    this.listElement = listElement;
   }
 
   async init() {
-    try {
-      // Fetch the list of products for the given category
-      const list = await this.dataSource.getCategoryProducts(this.category);
-  
-      // Render the list of products
-      this.renderList(list);
-  
-      // Update the page title with the category name
-      document.querySelector(".title").innerHTML = `Top Products: ${this.category}`;
-    } catch (error) {
-      console.error("Error initializing product list:", error);
-    }
+    const list = await this.dataSource.getData(this.category);
+    this.renderList(list);
+    document.querySelector(".title").textContent = this.category;
   }
+
   renderList(list) {
-    // Use the shared productCardTemplate to render the list
+    // const htmlStrings = list.map(productCardTemplate);
+    // this.listElement.insertAdjacentHTML("afterbegin", htmlStrings.join(""));
+
+    // apply use new utility function instead of the commented code above
     renderListWithTemplate(productCardTemplate, this.listElement, list);
+
   }
+
 }

@@ -1,107 +1,64 @@
-// utils.mjs:
-// Provides utility functions like loadHeaderFooter for consistent header/footer rendering.
-// Includes helper functions for rendering templates and managing local storage.
-
-// Wrapper for querySelector...returns matching element
+// wrapper for querySelector...returns matching element
 export function qs(selector, parent = document) {
     return parent.querySelector(selector);
   }
+  // or a more concise version if you are into that sort of thing:
+  // export const qs = (selector, parent = document) => parent.querySelector(selector);
   
-  // Retrieve data from local storage
+  // retrieve data from localstorage
   export function getLocalStorage(key) {
-    return JSON.parse(localStorage.getItem(key)) || [];
+    return JSON.parse(localStorage.getItem(key));
   }
-  
-  // Save data to local storage
+  // save data to local storage
   export function setLocalStorage(key, data) {
     localStorage.setItem(key, JSON.stringify(data));
   }
-  
-  // Set a listener for both touchend and click
+  // set a listener for both touchend and click
   export function setClick(selector, callback) {
-    const element = qs(selector);
-    if (!element) return;
-    element.addEventListener("touchend", (event) => {
+    qs(selector).addEventListener("touchend", (event) => {
       event.preventDefault();
       callback();
     });
-    element.addEventListener("click", callback);
+    qs(selector).addEventListener("click", callback);
   }
   
-  // Get a query parameter from the URL
-  export const getParam = (param) => {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(param);
-  };
+  // get the product id from the query string
+  export function getParam(param) {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const product = urlParams.get(param);
+    return product
+  }
   
-  // Render a list of items using a template function
-  export const renderListWithTemplate = (
-    templateFunction,
-    parentElement,
-    list,
-    position = "afterbegin",
-    clear = false
-  ) => {
+  export function renderListWithTemplate(template, parentElement, list, position = "afterbegin", clear = false) {
+    const htmlStrings = list.map(template);
+    // if clear is true we need to clear out the contents of the parent.
     if (clear) {
       parentElement.innerHTML = "";
     }
-    list.forEach((element) => {
-      parentElement.insertAdjacentHTML(position, templateFunction(element));
-    });
-  };
+    parentElement.insertAdjacentHTML(position, htmlStrings.join(""));
+  }
   
-  // Render a single template with optional callback
-  export const renderWithTemplate = (template, parentElement, data, callback) => {
+  export function renderWithTemplate(template, parentElement, data, callback) {
     parentElement.innerHTML = template;
     if (callback) {
       callback(data);
     }
-  };
+  }
   
-  // Template for rendering a product card
-  export const productCardTemplate = (product) => `
-    <div class="product-card">
-      <a href="../product_pages/index.html?product=${product.Id}">
-        <img src="${product.Images?.PrimaryLarge || product.Image}" alt="${product.Name}" />
-        <h4>${product.Name}</h4>
-      </a>
-      <p>${product.DescriptionHtmlSimple || "No description available."}</p>
-      <p>Price: $${product.FinalPrice || "N/A"}</p>
-      <button class="add-to-cart" data-id="${product.Id}">Add to Cart</button>
-    </div>
-  `;
+  async function loadTemplate(path) {
+    const res = await fetch(path);
+    const template = await res.text();
+    return template;
+  }
   
-  // Load an HTML template from a file
-  export const loadTemplate = async (path) => {
-    try {
-      const response = await fetch(path);
-      if (!response.ok) {
-        throw new Error(`Failed to load template: ${path}`);
-      }
-      return await response.text();
-    } catch (error) {
-      console.error(error);
-      return "";
-    }
-  };
+  export async function loadHeaderFooter() {
+    const headerTemplate = await loadTemplate("../partials/header.html");
+    const footerTemplate = await loadTemplate("../partials/footer.html");
   
-  // Update the cart count in the header
-  export const updateCartCount = () => {
-    const cart = getLocalStorage("so-cart");
-    const totalItems = Array.isArray(cart)
-      ? cart.reduce((total, item) => total + (item.Quantity || 1), 0)
-      : 0;
-    const cartCountElement = qs("#totalItemsInCart");
-    if (cartCountElement) {
-      cartCountElement.innerText = totalItems;
-    }
-  };
+    const headerElement = document.querySelector("#main-header");
+    const footerElement = document.querySelector("#main-footer");
   
-  // Load and render the header and footer
-  export const loadHeaderFooter = async () => {
-    const header = await loadTemplate("../partials/header.html");
-    const footer = await loadTemplate("../partials/footer.html");
-    renderWithTemplate(header, qs("#main-header"));
-    renderWithTemplate(footer, qs("#main-footer"));
-    updateCartCount(); // Update the cart count after loading the header
-  };
+    renderWithTemplate(headerTemplate, headerElement);
+    renderWithTemplate(footerTemplate, footerElement);
+  }
