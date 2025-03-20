@@ -7,23 +7,22 @@ export default class ProductList {
     this.listElement = listElement; // The DOM element where the list will be rendered
   }
 
-  init = async () => {
+  async init() {
     try {
       // Fetch the list of products for the given category
-      const list = await this.dataSource.getData(this.category);
-
+      const list = await this.dataSource.getCategoryProducts(this.category);
+  
       // Render the list of products
       this.renderList(list);
-
+  
       // Update the page title with the category name
-      document.querySelector(".title").innerHTML = this.category;
+      document.querySelector(".title").innerHTML = `Top Products: ${this.category}`;
     } catch (error) {
       console.error("Error initializing product list:", error);
     }
-  };
-
-  renderList = (list) => {
+  }
+  renderList(list) {
     // Use the shared productCardTemplate to render the list
     renderListWithTemplate(productCardTemplate, this.listElement, list);
-  };
+  }
 }

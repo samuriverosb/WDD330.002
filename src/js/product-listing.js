@@ -1,44 +1,29 @@
 import ProductData from "./ProductData.mjs";
-import { qs } from "./utils.mjs";
-import { productCardTemplate } from "./utils.mjs";
+import ProductList from "./ProductList.mjs";
+import { loadHeaderFooter, getParam } from "./utils.mjs";
 
-class ProductListing {
-  constructor(dataSource, topProductsContainer) {
-    this.dataSource = dataSource;
-    this.topProductsContainer = topProductsContainer;
-  }
+loadHeaderFooter();
 
-  async init() {
-    try {
-      const categories = ["tents", "backpacks", "sleeping-bags", "hammocks"];
-      for (const category of categories) {
-        const products = await this.dataSource.getCategoryProducts(category);
-        this.renderTopProducts(products, category);
-      }
-    } catch (error) {
-      console.error("Error initializing product listing:", error);
-    }
-  }
+// Get the category from the URL
+const category = getParam("category") || "default-category";
 
-  renderTopProducts(products, category) {
-    const topProducts = products.slice(0, 2); // Get the top 2 products
-
-    const categoryHTML = `
-      <div class="category-section">
-        <h3>${category.charAt(0).toUpperCase() + category.slice(1)}</h3>
-        <div class="category-products">
-          ${topProducts.map(productCardTemplate).join("")}
-        </div>
-        <a href="index.html?category=${category}" class="view-more">View More ${category}</a>
-      </div>
-    `;
-
-    this.topProductsContainer.insertAdjacentHTML("beforeend", categoryHTML);
-  }
+// Update the page title dynamically
+const categoryTitle = document.querySelector("#category-title");
+if (categoryTitle) {
+  categoryTitle.innerText =
+    category === "default-category"
+      ? "Top Products: Unknown Category"
+      : `Top Products: ${category.charAt(0).toUpperCase() + category.slice(1)}`;
+} else {
+  console.error('Element with selector "#category-title" not found. Unable to update the page title.');
 }
 
-// Initialize the product listing
-const dataSource = new ProductData();
-const topProductsContainer = qs("#top-products");
-const productListing = new ProductListing(dataSource, topProductsContainer);
-productListing.init();
+// Initialize the product list
+const listElement = document.querySelector("#top-products");
+if (listElement) {
+  const dataSource = new ProductData();
+  const productList = new ProductList(category, dataSource, listElement);
+  productList.init();
+} else {
+  console.error('Element with selector "#top-products" not found. Unable to render the product list.');
+}

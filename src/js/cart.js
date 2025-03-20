@@ -5,22 +5,20 @@ import { loadHeaderFooter } from "./utils.mjs";
 loadHeaderFooter();
 
 // Initialize the ShoppingCart instance
-const shoppingCart = new ShoppingCart("so-cart", ".product-list");
-
+const cart = new ShoppingCart("so-cart", "#cart-items");
 // Render the cart elements
-shoppingCart.renderCartElements();
+cart.renderCartElements();
 
-// Add a sample item to the cart for testing
+// Add a sample item to the cart for testing (optional, remove after testing)
 const sampleItem = {
-    Id: "123",
-    Name: "Tent",
-    Images: { PrimarySmall: "/images/tent.jpg" },
-    Colors: [{ ColorName: "Blue" }],
-    FinalPrice: 99.99,
-  };
-  
-shoppingCart.addToCart(sampleItem);
-  
+  Id: "123",
+  Name: "Tent",
+  Images: { PrimarySmall: "/images/tent.jpg" },
+  Colors: [{ ColorName: "Blue" }],
+  FinalPrice: 99.99,
+};
+
+cart.addToCart(sampleItem);
 // import ShoppingCart from "./ShoppingCart.mjs";
 // import { loadHeaderFooter } from "./utils.mjs";
 
