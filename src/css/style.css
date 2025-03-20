@@ -115,6 +115,7 @@ button {
     border: 0;
     font-size: var(--large-font);
     cursor: pointer;
+    margin-left: auto;
 }
 
 div.alert-container {
@@ -124,7 +125,7 @@ div.alert-container {
     right: 0;
     z-index: 1000;
     display: flex;
-    justify-content: center;
+    justify-content:end;
 }
 
 .divider {
@@ -319,6 +320,9 @@ div.alert-container {
         font-size: inherit;
         grid-template-columns: 150px auto 15%;
     }
+
+    .mission p {
+        font-size: 1.25rem;
 }
 
 footer {
