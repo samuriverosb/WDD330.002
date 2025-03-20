@@ -58,10 +58,10 @@ export default class ShoppingCart {
 
   addToCart = (item) => {
     const currentCart = getLocalStorage(this.key) || [];
-
+  
     // Check if the item is already in the cart
     const existingItem = currentCart.find((cartItem) => cartItem.Id === item.Id);
-
+  
     if (existingItem) {
       // If the item exists, increment the quantity
       existingItem.Quantity += 1;
@@ -70,11 +70,12 @@ export default class ShoppingCart {
       item.Quantity = 1;
       currentCart.push(item);
     }
-
-    // Save the updated cart to local storage
+  
+    // Update local storage
     setLocalStorage(this.key, currentCart);
-
-    // Re-render the cart
-    this.renderCartElements();
+  
+    // Update the cart count in local storage
+    const totalItems = currentCart.reduce((total, cartItem) => total + cartItem.Quantity, 0);
+    setLocalStorage("totalItemsInCart", totalItems);
   };
 }

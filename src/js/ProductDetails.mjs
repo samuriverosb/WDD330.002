@@ -1,8 +1,11 @@
 // ProductDetails.mjs:
 // Handles fetching and rendering details for a single product.
-// Includes functionality for adding a product to the cart.
+// Delegates cart functionality to ShoppingCart.mjs.
 
-import { setLocalStorage, getLocalStorage, loadHeaderFooter } from "./utils.mjs";
+import { loadHeaderFooter } from "./utils.mjs";
+import ShoppingCart from "./ShoppingCart.mjs";
+
+const cart = new ShoppingCart("so-cart", "#cart-items");
 
 const detailsTemplate = (product) => `
   <section class="product-detail">
@@ -48,18 +51,8 @@ export default class ProductDetails {
   };
 
   addProductToCart() {
-    const getCurrentCart = () =>
-      Array.isArray(getLocalStorage("so-cart"))
-        ? getLocalStorage("so-cart")
-        : [];
-    setLocalStorage("so-cart", [...getCurrentCart(), this.product]);
-
-    // Update the cart count
-    const totalItemsInCart =
-      getLocalStorage("totalItemsInCart") === undefined
-        ? getCurrentCart().length
-        : parseInt(getLocalStorage("totalItemsInCart"));
-    setLocalStorage("totalItemsInCart", totalItemsInCart + 1);
+    // Use ShoppingCart's addToCart method
+    cart.addToCart(this.product);
 
     // Alert the user and reload the header/footer to update the cart count
     alert("Product added to cart!");
