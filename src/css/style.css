@@ -2,11 +2,11 @@
     --font-body: Arial, Helvetica, sans-serif;
     --font-headline: Haettenschweiler, "Arial Narrow Bold", sans-serif;
     /* colors */
-    --primary-color: #f0a868;
+    --primary-color: #e18d43;
     --secondary-color: #525b0f;
-    --tertiary-color: #8a470c;
+    --tertiary-color: #723805;
     --light-grey: #d0d0d0;
-    --dark-grey: #303030;
+    --dark-grey: #2f2e2e;
 
     /* sizes */
     --font-base: 18px;
@@ -128,7 +128,7 @@ div.alert-container {
 }
 
 .divider {
-    border-bottom: 1px solid var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
 }
 
 /* End utility classes */
@@ -157,15 +157,17 @@ div.alert-container {
     right: 0;
     line-height: 1.3;
     width: 100%;
-    background-color: var(--dark-grey);
-    color: var(--light-grey);
+    background-color: var(--tertiary-color);
+    color: white;
     opacity: 0.8;
+    padding: 0.8rem;
 }
 
 .mission p {
     margin: 0 auto;
-    width: 50%;
+    width: 85%;
     text-align: center;
+    font-size: 1.5em;
 }
 
 /* Product Grid */
@@ -184,7 +186,7 @@ div.alert-container {
 }
 
 .product-grid img {
-    width: min(100px, 90%);
+    width: min(70px, 100%);
 }
 
 
@@ -194,7 +196,9 @@ div.alert-container {
 }
 
 .products h2 {
-    margin-bottom: 1em;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    color: black;
 }
 
 .product-list {
@@ -309,10 +313,6 @@ div.alert-container {
     body {
         max-width: 1080px;
         margin: auto;
-    }
-
-    .mission {
-        font-size: 1.2em;
     }
 
     .cart-card {
