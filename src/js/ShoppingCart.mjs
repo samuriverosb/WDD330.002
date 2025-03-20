@@ -1,3 +1,14 @@
+// ShoppingCart.mjs
+// This file is responsible for managing the shopping cart. It handles:
+// Rendering Cart Items:
+// The renderCartElements method dynamically generates HTML for each item in the cart and displays it in the specified parent element.
+// It also adds event listeners to delete buttons to allow users to remove items from the cart.
+// Adding Items to the Cart:
+// The addToCart method adds a product to the cart. If the product already exists, it increments the quantity; otherwise, it adds the product with a quantity of 1.
+// Local Storage Integration:
+// The cart data is stored in and retrieved from local storage using getLocalStorage and setLocalStorage from utils.mjs.
+
+
 import { getLocalStorage, setLocalStorage } from "./utils.mjs";
 
 const cartItemTemplate = (item, index) => {

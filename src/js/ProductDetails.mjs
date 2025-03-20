@@ -1,3 +1,7 @@
+// ProductDetails.mjs:
+// Handles fetching and rendering details for a single product.
+// Includes functionality for adding a product to the cart.
+
 import { setLocalStorage, getLocalStorage, loadHeaderFooter } from "./utils.mjs";
 
 const detailsTemplate = (product) => `
@@ -28,12 +32,20 @@ export default class ProductDetails {
   }
 
   init = async () => {
+    // Load the header and footer
+    await loadHeaderFooter();
+
+    // Fetch the product details
     this.product = await this.dataSource.findProductById(this.productId);
+
+    // Render the product details
     this.renderProductDetails("main");
+
+    // Add event listener for the "Add to Cart" button
     document
       .getElementById("addToCart")
       .addEventListener("click", this.addProductToCart.bind(this));
-  }
+  };
 
   addProductToCart() {
     const getCurrentCart = () =>
@@ -41,8 +53,15 @@ export default class ProductDetails {
         ? getLocalStorage("so-cart")
         : [];
     setLocalStorage("so-cart", [...getCurrentCart(), this.product]);
-    let totalItemsInCart = getLocalStorage("totalItemsInCart") == undefined ? parseInt(getLocalStorage("totalItemsInCart")) : getCurrentCart().length;
+
+    // Update the cart count
+    const totalItemsInCart =
+      getLocalStorage("totalItemsInCart") === undefined
+        ? getCurrentCart().length
+        : parseInt(getLocalStorage("totalItemsInCart"));
     setLocalStorage("totalItemsInCart", totalItemsInCart + 1);
+
+    // Alert the user and reload the header/footer to update the cart count
     alert("Product added to cart!");
     loadHeaderFooter();
   }

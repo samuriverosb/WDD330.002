@@ -1,5 +1,6 @@
-// const baseURL = import.meta.env.VITE_SERVER_URL;
-// const response = await fetch(`${baseURL}products/search/${category}`);
+// ProductData.mjs:
+// Centralized data-fetching logic for categories and individual products.
+// Provides methods like getData (fetches all products in a category) and findProductById (fetches a specific product by ID).
 
 function convertToJson(res) {
     if (res.ok) {

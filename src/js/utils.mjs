@@ -1,3 +1,8 @@
+
+// utils.mjs:
+// Provides utility functions like loadHeaderFooter for consistent header/footer rendering.
+// Includes helper functions for rendering templates and managing local storage.
+
 // wrapper for querySelector...returns matching element
 export function qs(selector, parent = document) {
   return parent.querySelector(selector);
