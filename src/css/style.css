@@ -310,20 +310,17 @@ div.alert-container {
     grid-column: 3;
 }
 
-@media screen and (min-width: 500px) {
+@media screen and (min-width: 360px) {
     body {
-        max-width: 1080px;
+        max-width: 960px;
         margin: auto;
+        font-size: 0.8em;
     }
 
     .cart-card {
-        font-size: inherit;
         grid-template-columns: 150px auto 15%;
     }
 
-    .mission p {
-        font-size: 1.25rem;
-    }
 }
 
 footer {
