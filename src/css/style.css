@@ -34,6 +34,7 @@ header {
     display: flex;
     justify-content: space-between;
     padding: 0.5rem;
+    margin-top: 2rem;
 }
 
 p {
@@ -62,6 +63,7 @@ p {
 
 .hero {
     position: relative;
+    margin-top: 1rem;
 }
 
 .hero .logo {
@@ -113,6 +115,16 @@ button {
     border: 0;
     font-size: var(--large-font);
     cursor: pointer;
+}
+
+div.alert-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
 }
 
 .divider {
