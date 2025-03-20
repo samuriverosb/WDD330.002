@@ -1,71 +1,35 @@
-import { loadHeaderFooter } from "./utils.mjs";
-import ShoppingCart from "./ShoppingCart.mjs";
-
-const cart = new ShoppingCart("so-cart", "#cart-items");
-
-export default class ProductDetails {
-  constructor(productId, dataSource) {
-    this.productId = productId;
-    this.product = {};
-    this.dataSource = dataSource;
-  }
-
-  init = async () => {
-    // Load the header and footer
-    await loadHeaderFooter();
-
-    // Fetch the product details
-    this.product = await this.dataSource.findProductById(this.productId);
-
-    // Render the product details
-    this.renderProductDetails("main");
-
-    // Add event listener for the "Add to Cart" button
-    document
-      .getElementById("addToCart")
-      .addEventListener("click", this.addProductToCart.bind(this));
-  };
-
-  addProductToCart() {
-    // Use ShoppingCart's addToCart method
-    cart.addToCart(this.product);
-
-    // Alert the user and reload the header/footer to update the cart count
-    alert("Product added to cart!");
-    loadHeaderFooter();
+export default class ProductData {
+    constructor(baseURL = "../public/json/") {
+      this.baseURL = baseURL; // Base URL for fetching JSON files
     }
-    
-    addCartListeners() {
-        const cartButtons = document.querySelectorAll(".add-to-cart");
-        cartButtons.forEach((button) => {
-          button.addEventListener("click", (event) => {
-            const productId = event.target.dataset.id;
-            const product = this.dataSource.findProductById(productId); // Ensure this method exists in your data source
-            cart.addToCart(product);
-          });
-        });
+  
+    // Fetch all products for a specific category
+    async getCategoryProducts(category) {
+      try {
+        const response = await fetch(`${this.baseURL}${category}.json`);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch data for category: ${category}`);
+        }
+        const data = await response.json();
+        return data.Result || data; // Adjust based on your JSON structure
+      } catch (error) {
+        console.error("Error fetching category products:", error);
+        return [];
       }
-
-  renderProductDetails(selector) {
-    const detailsTemplate = (product) => `
-      <section class="product-detail">
-        <h3>${product.Brand.Name}</h3>
-        <h2 class="divider">${product.NameWithoutBrand}</h2>
-        <img
-          class="divider"
-          src="${product.Images.PrimaryLarge}"
-          alt="${product.NameWithoutBrand}"
-        />
-        <p class="product-card__price">$${product.FinalPrice}</p>
-        <p class="product__color">${product.Colors[0].ColorName}</p>
-        <p class="product__description">
-          ${product.DescriptionHtmlSimple}
-        </p>
-        <div class="product-detail__add">
-          <button id="addToCart" data-id="${product.Id}">Add to Cart</button>
-        </div>
-      </section>
-    `;
-    document.querySelector(selector).innerHTML = detailsTemplate(this.product);
+    }
+  
+    // Fetch details for a specific product by ID
+    async findProductById(productId, category) {
+      try {
+        const products = await this.getCategoryProducts(category);
+        const product = products.find((item) => item.Id === productId);
+        if (!product) {
+          throw new Error(`Product with ID ${productId} not found in category ${category}`);
+        }
+        return product;
+      } catch (error) {
+        console.error("Error finding product by ID:", error);
+        return null;
+      }
+    }
   }
-}

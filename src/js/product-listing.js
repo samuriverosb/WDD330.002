@@ -1,7 +1,6 @@
-import ShoppingCart from "./ShoppingCart.mjs";
+import ProductData from "./ProductData.mjs";
+import { qs } from "./utils.mjs";
 import { productCardTemplate } from "./utils.mjs";
-
-const cart = new ShoppingCart("so-cart", "#cart-items");
 
 class ProductListing {
   constructor(dataSource, topProductsContainer) {
@@ -22,7 +21,7 @@ class ProductListing {
   }
 
   renderTopProducts(products, category) {
-    const topProducts = products.slice(0, 2);
+    const topProducts = products.slice(0, 2); // Get the top 2 products
 
     const categoryHTML = `
       <div class="category-section">
@@ -34,18 +33,12 @@ class ProductListing {
       </div>
     `;
 
-    this.topProductsContainer.innerHTML += categoryHTML;
-    this.addCartListeners();
-  }
-
-  addCartListeners() {
-    const cartButtons = document.querySelectorAll(".add-to-cart");
-    cartButtons.forEach((button) => {
-      button.addEventListener("click", (event) => {
-        const productId = event.target.dataset.id;
-        const product = this.dataSource.findProductById(productId); // Ensure this method exists
-        cart.addToCart(product);
-      });
-    });
+    this.topProductsContainer.insertAdjacentHTML("beforeend", categoryHTML);
   }
 }
+
+// Initialize the product listing
+const dataSource = new ProductData();
+const topProductsContainer = qs("#top-products");
+const productListing = new ProductListing(dataSource, topProductsContainer);
+productListing.init();
