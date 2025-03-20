@@ -130,9 +130,10 @@ div.alert-container {
 
 .divider {
     border-bottom: 2px solid var(--primary-color);
+    margin-bottom: 1rem;
+    width: 100%;
 }
 
-/* End utility classes */
 
 /* Cart icon styles */
 .cart {

@@ -20,14 +20,28 @@ export default class ProductDetails {
       .getElementById("add-to-cart")
       .addEventListener("click", this.addProductToCart.bind(this));
   }
-
   addProductToCart() {
     const cartItems = getLocalStorage("so-cart") || [];
     cartItems.push(this.product);
     setLocalStorage("so-cart", cartItems);
-
-    // Trigger the standard alert
-    alert("Item added to cart successfully!");
+  
+    // Create a custom alert
+    const alertMessage = document.createElement("div");
+    alertMessage.textContent = "Item added to cart successfully!";
+    alertMessage.style.position = "fixed";
+    alertMessage.style.top = "10px";
+    alertMessage.style.right = "10px";
+    alertMessage.style.backgroundColor = "green";
+    alertMessage.style.color = "white";
+    alertMessage.style.padding = "10px";
+    alertMessage.style.borderRadius = "5px";
+    alertMessage.style.zIndex = "1000";
+    document.body.appendChild(alertMessage);
+  
+    // Automatically remove the alert after 2 seconds
+    const timeout = setTimeout(() => {
+      alertMessage.remove();
+    }, 2000);
   }
 
   renderProductDetails() {
