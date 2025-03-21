@@ -1,32 +1,38 @@
 <!doctype html>
 
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>Sleep Outside | Cart</title>
-
     <link rel="stylesheet" href="/css/style.css" />
-
     <script src="../js/cart.js" type="module"></script>
-  </head>
+</head>
 
-  <body>
+<body>
     <header class="divider" id="main-header"></header>
+    
 
     <main class="divider">
-      <section class="products">
-        <h2>My Cart</h2>
+        <section class="products">
+            <h2>My Cart</h2>
+            <ul class="product-list"></ul>
 
-        <ul class="product-list"></ul>
-      </section>
-      <div id="cartFooter" class="cart-footer hide">
-        <p class="cart-total">Total: <b id="cartTotal"></b></p>
-      </div>
+
+            <!-- This is the parent container for cart items -->
+            <div class="list-footer hide">
+                <span class="list-item-count">Items: 0</span>
+                <span class="list-total">Total: $0.00</span>
+                <a href="../checkout/index.html">Checkout</a>
+            </div>
+        </section>
     </main>
 
-    <footer id="main-footer"></footer>
-  </body>
+    <footer id="main-footer">
+
+    </footer>
+</body>
+<!-- <span class="delete-button" data-index="${index}" style="color: red; cursor: pointer;">X</span> -->
+
 </html>

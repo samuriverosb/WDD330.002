@@ -1,3 +1,10 @@
+// main.js
+// This file handles global functionality for the application. It:
+// Loads the Header and Footer:
+// Uses loadHeaderFooter from utils.mjs to ensure consistent navigation and footer across all pages.
+// Loads Alerts:
+// Fetches alerts.json and uses the Alert class to display alerts on the page.
+
 import Alert from "./Alert.js";
 import { loadHeaderFooter } from "./utils.mjs";
 
