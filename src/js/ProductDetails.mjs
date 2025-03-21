@@ -20,9 +20,18 @@ export default class ProductDetails {
       .getElementById("add-to-cart")
       .addEventListener("click", this.addProductToCart.bind(this));
   }
+
   addProductToCart() {
     const cartItems = getLocalStorage("so-cart") || [];
-    cartItems.push(this.product);
+    const existingItem = cartItems.find((cartItem) => cartItem.Id === this.product.Id);
+    
+    if (existingItem) {
+      existingItem.Quantity += 1; // Se já existir, aumenta a quantidade
+    } else {
+        this.product.Quantity = 1; // Se não existir, define Quantity como 1
+        cartItems.push(this.product);
+    }
+    
     setLocalStorage("so-cart", cartItems);
   
     // Create a custom alert
@@ -39,7 +48,7 @@ export default class ProductDetails {
     document.body.appendChild(alertMessage);
   
     // Automatically remove the alert after 2 seconds
-    const timeout = setTimeout(() => {
+    setTimeout(() => {
       alertMessage.remove();
     }, 2000);
   }

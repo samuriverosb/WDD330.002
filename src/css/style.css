@@ -288,6 +288,8 @@ div.alert-container {
 
 .cart-card p {
     margin-top: 0;
+    padding: 0;
+    font-size: 1rem;
 }
 
 .cart-card .card__name {
