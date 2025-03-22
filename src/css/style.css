@@ -365,3 +365,14 @@ footer {
     border-top: 1px solid var(--tertiary-color);
     padding: 1em;
 }
+
+#totalItemsInCart {
+    position: absolute;
+    right: 0;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.2em 0.5em;
+    border-radius: 50%;
+    font-size: 0.8em;
+    margin-top: .8rem;
+}
