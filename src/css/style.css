@@ -268,11 +268,11 @@ div.alert-container {
 }
 
 .card__brand {
-    font-size: 0.9em;
+    font-size: 0.8rem;
 }
 
 .card__name {
-    font-size: 1.5em;
+    font-size: 1em;
 }
 
 /* End product list card */
