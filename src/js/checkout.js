@@ -1,26 +1,29 @@
 import { getLocalStorage, setLocalStorage } from "./utils.mjs";
 
 const cartItemTemplate = (item, index) => {
-    // Use a placeholder image if PrimarySmall is missing
-    const imageUrl = item.Images?.PrimarySmall || "../images/camping-products.png";
-    const colorName = item.Colors?.[0]?.ColorName || "No color specified";
-  
-    return `<li class="cart-card divider">
-      <a href="#" class="cart-card__image">
-        <img
-          src="${imageUrl}"
-          alt="${item.Name}"
-        />
-      </a>
-      <a href="#">
-        <h2 class="card__name">${item.Name}</h2>
-      </a>
-      <p class="cart-card__color">${colorName}</p>
-      <p class="cart-card__quantity">qty: ${item.Quantity}</p>
-      <p class="cart-card__price">$${item.FinalPrice}</p>
-      <span class="delete-button" data-index="${index}" style="color: red; cursor: pointer;">X</span>
-    </li>`;
-  };
+  // Use a placeholder image if PrimarySmall is missing
+  const imageUrl = item.Images?.PrimarySmall || "../images/camping-products.png";
+  const colorName = item.Colors?.[0]?.ColorName || "No color specified";
+  const price = item.FinalPrice ? item.FinalPrice.toFixed(2) : "0.00";
+  const quantity = item.Quantity ? item.Quantity : 1;
+
+  return `
+  <li class="cart-card divider">
+    <a href="#" class="cart-card__image">
+      <img
+        src="${imageUrl}"
+        alt="${item.Name}"
+      />
+    </a>
+    <a href="#">
+      <h2 class="card__name">${item.Name}</h2>
+    </a>
+    <p class="cart-card__color">${colorName}</p>
+    <p class="cart-card__quantity">${quantity}</p>
+    <p class="cart-card__price">$${price}</p>
+    <span class="delete-button" data-index="${index}" style="color: red; cursor: pointer;">X</span>
+  </li>`;
+};
 
 export default class ShoppingCart {
   constructor(key, parentSelector) {
@@ -34,7 +37,7 @@ export default class ShoppingCart {
       console.error(`Element with selector "${this.parentSelector}" not found.`);
       return;
     }
-  
+    
     const cartElements = getLocalStorage(this.key) || [];
     const htmlElements = cartElements.map((element, index) => cartItemTemplate(element, index));
     parentElement.innerHTML = htmlElements.join("");
@@ -62,9 +65,14 @@ export default class ShoppingCart {
       });
     });
   };
+
   addToCart = (item) => {
     const currentCart = getLocalStorage(this.key) || [];
-  
+    
+    if (!item.Quantity || isNaN(item.Quantity)) {
+      item.Quantity = 1;
+    }
+
     // Check if the item is already in the cart
     const existingItem = currentCart.find((cartItem) => cartItem.Id === item.Id);
   
