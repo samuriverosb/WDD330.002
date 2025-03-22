@@ -125,7 +125,7 @@ div.alert-container {
     right: 0;
     z-index: 1000;
     display: flex;
-    justify-content:end;
+    justify-content: end;
 }
 
 .divider {
@@ -223,6 +223,43 @@ div.alert-container {
     border: 1px solid var(--light-grey);
     max-width: 250px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* Ensures spacing between elements */
+    align-items: center;
+    /* Centers content horizontally */
+    max-height: 350px;
+    /* Ensures the card takes up full height */
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.add-to-cart-button {
+    margin-top: auto;
+    /* Pushes the button to the bottom of the card */
+    padding: 0.3rem 0.8rem;
+    /* Reduces the padding for a smaller button */
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    /* Makes the font size smaller */
+    text-align: center;
+    display: block;
+    width: fit-content;
+    /* Keeps the button width based on its content */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.add-to-cart-button:hover {
+    background-color: #0056b3;
 }
 
 .product-card h3,
@@ -231,7 +268,7 @@ div.alert-container {
 }
 
 .card__brand {
-    font-size: var(--small-font);
+    font-size: 0.8rem;
 }
 
 .card__name {
@@ -239,7 +276,6 @@ div.alert-container {
 }
 
 /* End product list card */
-
 .product-detail {
 
     width: max(500px, 90%);
@@ -330,4 +366,15 @@ footer {
     font-size: var(--small-font);
     border-top: 1px solid var(--tertiary-color);
     padding: 1em;
+}
+
+#totalItemsInCart {
+    position: absolute;
+    right: 0;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.2em 0.5em;
+    border-radius: 50%;
+    font-size: 0.8em;
+    margin-top: .8rem;
 }

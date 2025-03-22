@@ -1,6 +1,6 @@
 import { getLocalStorage, setLocalStorage } from "./utils.mjs";
 
-export default class ProductDetails {
+export default class ProductDetail {
   constructor(productId, dataSource) {
     this.productId = productId;
     this.product = {};
@@ -8,52 +8,54 @@ export default class ProductDetails {
   }
 
   async init() {
-    // Use the datasource to get the details for the current product. findProductById will return a promise! Use await or .then() to process it.
+    console.log("Initializing ProductDetail..."); // Debugging log
     this.product = await this.dataSource.findProductById(this.productId);
+    console.log("Fetched product details:", this.product); // Debugging log
 
-    // The product details are needed before rendering the HTML
     this.renderProductDetails();
 
-    // Once the HTML is rendered, add a listener to the Add to Cart button
-    // Notice the .bind(this). This callback will not work if the bind(this) is missing.
+    // Add event listener for the Add to Cart button
     document
       .getElementById("add-to-cart")
-      .addEventListener("click", this.addProductToCart.bind(this));
+      .addEventListener("click", () => this.addProductToCart(this.product));
   }
 
-  addProductToCart() {
+  addProductToCart(product) {
+    console.log("Adding product to cart:", product); // Debugging log
     const cartItems = getLocalStorage("so-cart") || [];
-    const existingItem = cartItems.find((cartItem) => cartItem.Id === this.product.Id);
-    
-    if (existingItem) {
-      existingItem.Quantity += 1; // Se já existir, aumenta a quantidade
+    const existingProduct = cartItems.find((item) => item.Id === product.Id);
+
+    if (existingProduct) {
+      existingProduct.Quantity = (existingProduct.Quantity || 1) + 1;
+      console.log("Increased quantity for product:", existingProduct); // Debugging log
     } else {
-        this.product.Quantity = 1; // Se não existir, define Quantity como 1
-        cartItems.push(this.product);
+      product.Quantity = 1;
+      cartItems.push(product);
+      console.log("Added new product to cart:", product); // Debugging log
     }
-    
+
     setLocalStorage("so-cart", cartItems);
-  
-    // Create a custom alert
-    const alertMessage = document.createElement("div");
-    alertMessage.textContent = "Item added to cart successfully!";
-    alertMessage.style.position = "fixed";
-    alertMessage.style.top = "10px";
-    alertMessage.style.right = "10px";
-    alertMessage.style.backgroundColor = "green";
-    alertMessage.style.color = "white";
-    alertMessage.style.padding = "10px";
-    alertMessage.style.borderRadius = "5px";
-    alertMessage.style.zIndex = "1000";
-    document.body.appendChild(alertMessage);
-  
-    // Automatically remove the alert after 2 seconds
+
+    // Custom notification
+    const notification = document.createElement("div");
+    notification.textContent = "Product added to cart!";
+    notification.style.position = "fixed";
+    notification.style.top = "10px"; // Position it near the top
+    notification.style.right = "50px"; // Adjust to align near the backpack icon
+    notification.style.backgroundColor = "green";
+    notification.style.color = "white";
+    notification.style.padding = "10px";
+    notification.style.borderRadius = "5px";
+    notification.style.zIndex = "1000";
+    document.body.appendChild(notification);
+
     setTimeout(() => {
-      alertMessage.remove();
+      notification.remove();
     }, 2000);
   }
 
   renderProductDetails() {
+    console.log("Rendering product details..."); // Debugging log
     productDetailsTemplate(this.product);
   }
 }

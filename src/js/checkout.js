@@ -1,25 +1,21 @@
 import { getLocalStorage, setLocalStorage } from "./utils.mjs";
 
 const cartItemTemplate = (item, index) => {
-  // Use a placeholder image if PrimarySmall is missing
   const imageUrl = item.Images?.PrimarySmall || "../images/camping-products.png";
   const colorName = item.Colors?.[0]?.ColorName || "No color specified";
-  const price = item.FinalPrice ? item.FinalPrice.toFixed(2) : "0.00";
+  const price = item.FinalPrice ? (item.FinalPrice * item.Quantity).toFixed(2) : "0.00";
   const quantity = item.Quantity ? item.Quantity : 1;
 
   return `
   <li class="cart-card divider">
     <a href="#" class="cart-card__image">
-      <img
-        src="${imageUrl}"
-        alt="${item.Name}"
-      />
+      <img src="${imageUrl}" alt="${item.Name}" />
     </a>
     <a href="#">
       <h2 class="card__name">${item.Name}</h2>
     </a>
     <p class="cart-card__color">${colorName}</p>
-    <p class="cart-card__quantity">${quantity}</p>
+    <p class="cart-card__quantity">qty: ${quantity}</p>
     <p class="cart-card__price">$${price}</p>
     <span class="delete-button" data-index="${index}" style="color: red; cursor: pointer;">X</span>
   </li>`;
@@ -37,12 +33,11 @@ export default class ShoppingCart {
       console.error(`Element with selector "${this.parentSelector}" not found.`);
       return;
     }
-    
+
     const cartElements = getLocalStorage(this.key) || [];
     const htmlElements = cartElements.map((element, index) => cartItemTemplate(element, index));
     parentElement.innerHTML = htmlElements.join("");
-  
-    // Show or hide the cart footer based on cart contents
+
     const cartFooter = document.querySelector("#cartFooter");
     if (cartElements.length > 0) {
       cartFooter.classList.remove("hide");
@@ -50,46 +45,51 @@ export default class ShoppingCart {
       document.querySelector("#cartTotal").innerText = `$${total.toFixed(2)}`;
     } else {
       cartFooter.classList.add("hide");
-      alert("Your cart is empty.");
+      parentElement.innerHTML = "<p>Your cart is empty.</p>";
     }
-  
-    // Add event listeners for delete buttons
+
+    // Add event listeners for the delete buttons
     document.querySelectorAll(".delete-button").forEach((button) => {
       button.addEventListener("click", (e) => {
         const itemIndex = e.target.dataset.index;
-  
+
+        // Get the current cart from local storage
         const currentCart = getLocalStorage(this.key);
-        currentCart.splice(itemIndex, 1); // Remove the item
-        setLocalStorage(this.key, currentCart); // Update local storage
-        this.renderCartElements(); // Re-render the cart
+
+        // Decrease the quantity of the item
+        if (currentCart[itemIndex].Quantity > 1) {
+          currentCart[itemIndex].Quantity -= 1;
+        } else {
+          // If the quantity is 1, remove the item from the cart
+          currentCart.splice(itemIndex, 1);
+        }
+
+        // Update local storage with the modified cart
+        setLocalStorage(this.key, currentCart);
+
+        // Re-render the cart
+        this.renderCartElements();
       });
     });
   };
 
   addToCart = (item) => {
     const currentCart = getLocalStorage(this.key) || [];
-    
+
     if (!item.Quantity || isNaN(item.Quantity)) {
       item.Quantity = 1;
     }
 
     // Check if the item is already in the cart
     const existingItem = currentCart.find((cartItem) => cartItem.Id === item.Id);
-  
+
     if (existingItem) {
-      // If the item exists, increment the quantity
-      existingItem.Quantity += 1;
+      existingItem.Quantity += item.Quantity;
     } else {
-      // If the item does not exist, add it to the cart with a quantity of 1
-      item.Quantity = 1;
       currentCart.push(item);
     }
-  
-    // Update local storage
+
     setLocalStorage(this.key, currentCart);
-  
-    // Update the cart count in local storage
-    const totalItems = currentCart.reduce((total, cartItem) => total + cartItem.Quantity, 0);
-    setLocalStorage("totalItemsInCart", totalItems);
+    this.renderCartElements();
   };
 }
