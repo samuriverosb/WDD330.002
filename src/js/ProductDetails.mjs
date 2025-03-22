@@ -40,12 +40,13 @@ export default class ProductDetail {
     const notification = document.createElement("div");
     notification.textContent = "Product added to cart!";
     notification.style.position = "fixed";
-    notification.style.bottom = "10px";
-    notification.style.right = "10px";
+    notification.style.top = "10px"; // Position it near the top
+    notification.style.right = "50px"; // Adjust to align near the backpack icon
     notification.style.backgroundColor = "green";
     notification.style.color = "white";
     notification.style.padding = "10px";
     notification.style.borderRadius = "5px";
+    notification.style.zIndex = "1000";
     document.body.appendChild(notification);
 
     setTimeout(() => {
