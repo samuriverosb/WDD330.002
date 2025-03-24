@@ -1,4 +1,4 @@
-import ProductData from "../js/ProductData.mjs";
+import ProductData from "../js/ProductData.js";
 
 async function testProductData() {
   const dataSource = new ProductData();
