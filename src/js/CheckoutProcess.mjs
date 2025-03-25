@@ -1,5 +1,6 @@
 import ExternalServices from "./ExternalServices.mjs";
-import { getLocalStorage } from "./utils.mjs";
+import { getLocalStorage, setLocalStorage } from "./utils.mjs";
+import Alert from "./Alert";
 
 export default class CheckoutProcess {
   constructor(key) {
@@ -57,12 +58,24 @@ export default class CheckoutProcess {
     json["orderTotal"] = toString(this.total.toFixed(2));
     json["shipping"] = this.shipping;
     json["tax"] = toString(this.tax.toFixed(2));
-    const externalServices = new ExternalServices();
     try {
+      const externalServices = new ExternalServices();
       const response = await externalServices.postData(json);
-      alert("Order placed successfully! Order ID: " + response.orderId);
+      if (response.message === "Order Placed") {
+        setLocalStorage("so-cart", []);
+        location.assign(`/checkout/success.html?orderId=${response.orderId}`);
+      }
     } catch (error) {
-      console.error(error)
+      let errors = []
+      for (let message in error.message) {
+        errors.push({
+          "message": error.message[message],
+          "background": "orange",
+          "color": "black"
+        })
+      }
+      const alertObject =  new Alert(errors);
+      alertObject.createAlert();
     }
   }
 }
