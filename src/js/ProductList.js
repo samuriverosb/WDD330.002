@@ -65,18 +65,24 @@ export default class ProductList {
 
     setLocalStorage("so-cart", cartItems);
 
-    // Custom notification
     const notification = document.createElement("div");
     notification.textContent = "Product added to cart!";
     notification.style.position = "fixed";
-    notification.style.bottom = "10px";
-    notification.style.right = "10px";
+    notification.style.top = "50px";
+    notification.style.right = "60px";
     notification.style.backgroundColor = "green";
     notification.style.color = "white";
     notification.style.padding = "10px";
     notification.style.borderRadius = "5px";
+    notification.style.transform = "rotateY(90deg)";
+    notification.style.transition = "transform 0.5s ease"
+
+     
     document.body.appendChild(notification);
 
+    setTimeout(() => {
+       notification.style.transform = "rotateY(0deg)"; // Flip the card to show the front
+    }, 10);
     setTimeout(() => {
       notification.remove();
     }, 2000);
