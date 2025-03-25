@@ -49,21 +49,16 @@ export default class ShoppingCart {
       button.addEventListener("click", (e) => {
         const itemIndex = e.target.dataset.index;
 
-        // Get the current cart from local storage
-        const currentCart = getLocalStorage(this.key);
-
-        // Decrease the quantity of the item
-        if (currentCart[itemIndex].Quantity > 1) {
-          currentCart[itemIndex].Quantity -= 1;
-        } else {
-          // If the quantity is 1, remove the item from the cart
+        const currentCart = getLocalStorage("so-cart");
+        if (currentCart[itemIndex].Quantity === 1) {
           currentCart.splice(itemIndex, 1);
+        } else {
+          currentCart[itemIndex].Quantity--;
         }
-
-        // Update local storage with the modified cart
-        setLocalStorage(this.key, currentCart);
-
-        // Re-render the cart
+        setLocalStorage("so-cart", currentCart);
+        setLocalStorage("totalItemsInCart", totalItems === 0 || totalItems < 0 ? 0 : totalItems - 1);
+        loadHeaderFooter();
+        document.getElementById("list-total-items").innerText = `Items: ${cartElements.length}`;
         this.renderCartElements();
       });
     });
