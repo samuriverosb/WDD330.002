@@ -73,13 +73,45 @@ function productDetailsTemplate(product) {
   productImage.src = product.Images.PrimaryExtraLarge;
   productImage.alt = product.NameWithoutBrand;
 
+
   const euroPrice = new Intl.NumberFormat("de-DE", {
     style: "currency",
     currency: "EUR",
   }).format(Number(product.FinalPrice) * 0.85);
+
   document.querySelector("#p-price").textContent = `${euroPrice}`;
   document.querySelector("#p-color").textContent = product.Colors[0].ColorName;
   document.querySelector("#p-description").innerHTML = product.DescriptionHtmlSimple;
 
   document.querySelector("#add-to-cart").dataset.id = product.Id;
+
+  const originalPrice = product.SuggestedRetailPrice;
+  const finalPrice = product.FinalPrice;
+
+  if (originalPrice && finalPrice && originalPrice > finalPrice) {
+    const discountPercentage = Math.round(((originalPrice - finalPrice) / originalPrice) * 100);
+
+    const discountBadge = document.createElement("div");
+    discountBadge.textContent = `-${discountPercentage}%`;
+    discountBadge.style.position = "absolute";
+    discountBadge.style.top = "10px";
+    discountBadge.style.right = "10px";
+    discountBadge.style.backgroundColor = "red";
+    discountBadge.style.color = "white";
+    discountBadge.style.padding = "5px 10px";
+    discountBadge.style.fontWeight = "bold";
+    discountBadge.style.borderRadius = "5px";
+    discountBadge.style.zIndex = "1000";
+
+    const productContainer = document.querySelector(".product-detail");
+    productContainer.style.position = "relative";
+    productContainer.appendChild(discountBadge);
+
+    console.log(`Discount Applied: ${discountPercentage}%`);
+  } else {
+    console.log("No discount available");
+  }
+
+
+  
 }
