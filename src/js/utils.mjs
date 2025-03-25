@@ -62,6 +62,6 @@ export async function loadHeaderFooter() {
   renderWithTemplate(headerTemplate, headerElement);
   renderWithTemplate(footerTemplate, footerElement);
   const cartElements = getLocalStorage("so-cart") || [];
-  const totalItems = cartElements.reduce((sum, item) => sum + item.Quantity, 0);
+  const totalItems = cartElements.reduce((sum, item) => sum + item.Quantity, 0) ? 0 : cartElements.reduce((sum, item) => sum + item.Quantity, 0);
   document.getElementById("totalItemsInCart").innerText = totalItems;
 }
