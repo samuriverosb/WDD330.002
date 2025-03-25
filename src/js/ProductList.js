@@ -52,8 +52,8 @@ export default class ProductList {
   addProductToCart(product) {
     const cartItems = getLocalStorage("so-cart") || [];
     const existingProduct = cartItems.find((item) => item.Id === product.Id);
-    const currentItems = localStorage.getItem("totalItemsInCart") == undefined || typeof localStorage.getItem("totalItemsInCart") == "string" ? cartItems.length : localStorage.getItem("totalItemsInCart");
-    localStorage.setItem("totalItemsInCart", currentItems + 1);
+    const totalItems = cartItems.reduce((sum, item) => sum + item.Quantity, 0);
+    setLocalStorage("totalItemsInCart", totalItems + 1);
     loadHeaderFooter();
 
     if (existingProduct) {

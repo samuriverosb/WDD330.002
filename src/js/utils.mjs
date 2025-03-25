@@ -61,9 +61,7 @@ export async function loadHeaderFooter() {
 
   renderWithTemplate(headerTemplate, headerElement);
   renderWithTemplate(footerTemplate, footerElement);
-  document.getElementById("totalItemsInCart").innerText = getLocalStorage("totalItemsInCart") == undefined || typeof localStorage.getItem("totalItemsInCart") == "string"
-    ?
-    (Array.isArray(getLocalStorage("so-cart")) ? getLocalStorage("so-cart") : []).length
-    :
-    getLocalStorage("totalItemsInCart")
+  const cartElements = getLocalStorage("so-cart") || [];
+  const totalItems = cartElements.reduce((sum, item) => sum + item.Quantity, 0);
+  document.getElementById("totalItemsInCart").innerText = totalItems;
 }

@@ -24,8 +24,9 @@ export default class ShoppingCart {
   renderCartElements = () => {
     const cartElements = getLocalStorage(this.key) || [];
     const htmlElements = cartElements.map((element, index) => cartItemTemplate(element, index));
+    const totalItems = cartElements.reduce((sum, item) => sum + item.Quantity, 0);
     document.querySelector(this.parentSelector).innerHTML = htmlElements.join("");
-    document.getElementById("list-total-items").innerText = `Items: ${cartElements.length}`;
+    document.getElementById("list-total-items").innerText = `Items: ${totalItems}`;
     loadHeaderFooter();
     if (cartElements.length > 0) {
       const totalPrice = cartElements.reduce((sum, item) => sum + item.FinalPrice * item.Quantity, 0);
@@ -41,10 +42,13 @@ export default class ShoppingCart {
         const itemIndex = e.target.dataset.index;
 
         const currentCart = getLocalStorage("so-cart");
-        currentCart.splice(itemIndex, 1);
+        if (currentCart[itemIndex].Quantity === 1) {
+          currentCart.splice(itemIndex, 1);
+        } else {
+          currentCart[itemIndex].Quantity--;
+        }
         setLocalStorage("so-cart", currentCart);
-        const totalItemsInCart = getLocalStorage("totalItemsInCart") == undefined ? cartElements.length : parseInt(getLocalStorage("totalItemsInCart"));
-        setLocalStorage("totalItemsInCart", totalItemsInCart - 1);
+        setLocalStorage("totalItemsInCart", totalItems === 0 || totalItems < 0 ? 0 : totalItems - 1);
         loadHeaderFooter();
         document.getElementById("list-total-items").innerText = `Items: ${cartElements.length}`;
         this.renderCartElements();
