@@ -29,10 +29,6 @@ export default class ShoppingCart {
 
   renderCartElements = () => {
     const parentElement = document.querySelector(this.parentSelector);
-    if (!parentElement) {
-      console.error(`Element with selector "${this.parentSelector}" not found.`);
-      return;
-    }
 
     const cartElements = getLocalStorage(this.key) || [];
     const htmlElements = cartElements.map((element, index) => cartItemTemplate(element, index));
