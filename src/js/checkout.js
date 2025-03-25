@@ -1,4 +1,15 @@
-import { getLocalStorage, setLocalStorage } from "./utils.mjs";
+import { getLocalStorage, setLocalStorage, loadHeaderFooter } from "./utils.mjs";
+import CheckoutProcess from "./CheckoutProcess.mjs";
+
+loadHeaderFooter();
+
+const checkout = new CheckoutProcess("so-cart")
+checkout.init();
+
+document.getElementById("zip").onchange = () => {
+  const zip = document.getElementById("zip").value;
+  return zip.length > 3 ? checkout.calculateTotal() : null;
+};
 
 const cartItemTemplate = (item, index) => {
   const imageUrl = item.Images?.PrimarySmall || "../images/camping-products.png";
