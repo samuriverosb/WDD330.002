@@ -12,3 +12,7 @@ const listElement = document.querySelector(".product-list");
 const myList = new ProductList(category, dataSource, listElement);
 // finally call the init method to show the products
 myList.init();
+
+document.getElementById("modalClose").onclick = () => {
+  document.getElementById("modal").classList.add("hide");
+}
