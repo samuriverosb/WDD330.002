@@ -1,4 +1,4 @@
-import { getLocalStorage, setLocalStorage } from "./utils.mjs";
+import { getLocalStorage, loadHeaderFooter, setLocalStorage } from "./utils.mjs";
 
 export default class ProductDetail {
   constructor(productId, dataSource) {
@@ -24,6 +24,9 @@ export default class ProductDetail {
     console.log("Adding product to cart:", product); // Debugging log
     const cartItems = getLocalStorage("so-cart") || [];
     const existingProduct = cartItems.find((item) => item.Id === product.Id);
+    const currentItems = localStorage.getItem("totalItemsInCart") == undefined || typeof localStorage.getItem("totalItemsInCart") == "string" ? cartItems.length : localStorage.getItem("totalItemsInCart");
+    localStorage.setItem("totalItemsInCart", currentItems + 1);
+    loadHeaderFooter();
 
     if (existingProduct) {
       existingProduct.Quantity = (existingProduct.Quantity || 1) + 1;
