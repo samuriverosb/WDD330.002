@@ -1,7 +1,7 @@
-import ProductData from "../js/ProductData.js";
+import ExternalServices from "../js/ExternalServices.mjs";
 
-async function testProductData() {
-  const dataSource = new ProductData();
+async function testExternalServices() {
+  const dataSource = new ExternalServices();
 
   // Test getCategoryProducts
   console.log("Testing getCategoryProducts...");
@@ -16,4 +16,4 @@ async function testProductData() {
   console.log(`Product details for ID "${productId}":`, product);
 }
 
-testProductData();
+testExternalServices();

@@ -11,6 +11,11 @@ document.getElementById("zip").onchange = () => {
   return zip.length > 3 ? checkout.calculateTotal() : null;
 };
 
+document.forms["checkout"].onsubmit = (event) => {
+  event.preventDefault();
+  checkout.checkout(event.target);
+}
+
 const cartItemTemplate = (item, index) => {
   const imageUrl = item.Images?.PrimarySmall || "../images/camping-products.png";
   const colorName = item.Colors?.[0]?.ColorName || "No color specified";
