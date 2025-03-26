@@ -1,4 +1,5 @@
 import { renderListWithTemplate, getLocalStorage, setLocalStorage, loadHeaderFooter } from "./utils.mjs";
+import ProductDetail from "./ProductDetails.mjs";
 
 function productCardTemplate(product) {
   return `
@@ -18,6 +19,7 @@ function productCardTemplate(product) {
         <p>${product.NameWithoutBrand}</p>
         <p class="product-card__price">$${product.FinalPrice}</p>
       </a>
+      <button class="preview" data-id="${product.Id}">Preview</button>
       <button class="add-to-cart-button" data-id="${product.Id}">Add to Cart</button>
     </li>
   `;
@@ -43,10 +45,31 @@ export default class ProductList {
         this.addProductToCart(product);
       });
     });
+    document.querySelectorAll(".preview").forEach((button) => {
+      button.addEventListener("click", (e) => {
+        const productId = e.target.dataset.id;
+        const product = list.find((p) => p.Id === productId);
+        this.renderModal(productId);
+      });
+    });
   }
 
   renderList(list) {
     renderListWithTemplate(productCardTemplate, this.listElement, list);
+  }
+
+  renderModal = (productId) => {
+    document.getElementById("p-image").src = "";
+    document.getElementById("p-image").alt = "";
+    document.getElementById("p-brand").innerText = "";
+    document.getElementById("p-name").innerText = "";
+    document.getElementById("p-color").innerText = "";
+    document.getElementById("p-description").innerText = "";
+    document.getElementById("p-price").innerText = "";
+
+    const productDetail = new ProductDetail(productId, this.dataSource)
+    productDetail.init();
+    document.getElementById("modal").classList.remove("hide");
   }
 
   addProductToCart(product) {
