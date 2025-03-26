@@ -16,41 +16,61 @@ const cartItemTemplate = (item, index) => {
 };
 
 export default class ShoppingCart {
-  constructor(key, parentSelector) {
+  constructor(key, parentElement) {
     this.key = key;
-    this.parentSelector = parentSelector;
+    this.parentElement = parentElement;
+    this.cartItems = getLocalStorage(this.key) || [];
   }
 
   renderCartElements = () => {
     const cartElements = getLocalStorage(this.key) || [];
-    const htmlElements = cartElements.map((element, index) => cartItemTemplate(element, index));
-    const totalItems = cartElements.reduce((sum, item) => sum + item.Quantity, 0);
-    document.querySelector(this.parentSelector).innerHTML = htmlElements.join("");
-    document.getElementById("list-total-items").innerText = `Items: ${totalItems}`;
-    loadHeaderFooter();
-    if (cartElements.length > 0) {
-      const totalPrice = cartElements.reduce((sum, item) => sum + item.FinalPrice * item.Quantity, 0);
-      document.getElementById("list-total").innerText = `Total: $${totalPrice.toFixed(2)}`;
-    }
+  
+    // Handle empty cart
     if (cartElements.length === 0) {
+      this.parentElement.innerHTML = "<p>Your cart is empty.</p>";
+      document.getElementById("list-total-items").innerText = `Items: 0`;
       document.getElementById("list-total").innerText = `Total: $0.00`;
-      alert("Your cart is empty.");
+  
+      // Hide the totals section
+      document.querySelector(".list-footer").classList.add("hide");
       return;
     }
+  
+    // Render cart items
+    const htmlElements = cartElements.map((element, index) => cartItemTemplate(element, index));
+    this.parentElement.innerHTML = htmlElements.join("");
+  
+    // Calculate totals
+    const totalItems = cartElements.reduce((sum, item) => sum + item.Quantity, 0);
+    const totalPrice = cartElements.reduce((sum, item) => sum + item.FinalPrice * item.Quantity, 0);
+  
+    // Update totals in the DOM
+    document.getElementById("list-total-items").innerText = `Items: ${totalItems}`;
+    document.getElementById("list-total").innerText = `Total: $${totalPrice.toFixed(2)}`;
+  
+    // Show the totals section
+    document.querySelector(".list-footer").classList.remove("hide");
+  
+    // Add event listeners for delete buttons
+    this.addDeleteEventListeners(cartElements);
+  };
+
+  addDeleteEventListeners = (cartElements) => {
     document.querySelectorAll(".delete-button").forEach((button) => {
       button.addEventListener("click", (e) => {
         const itemIndex = e.target.dataset.index;
 
-        const currentCart = getLocalStorage("so-cart");
-        if (currentCart[itemIndex].Quantity === 1) {
-          currentCart.splice(itemIndex, 1);
+        // Update cart in localStorage
+        if (cartElements[itemIndex].Quantity === 1) {
+          cartElements.splice(itemIndex, 1); // Remove item if quantity is 1
         } else {
-          currentCart[itemIndex].Quantity--;
+          cartElements[itemIndex].Quantity--; // Decrease quantity
         }
-        setLocalStorage("so-cart", currentCart);
-        setLocalStorage("totalItemsInCart", totalItems === 0 || totalItems < 0 ? 0 : totalItems - 1);
-        loadHeaderFooter();
-        document.getElementById("list-total-items").innerText = `Items: ${cartElements.length}`;
+
+        // Save updated cart to localStorage
+        setLocalStorage(this.key, cartElements);
+
+        // Re-render cart
         this.renderCartElements();
       });
     });

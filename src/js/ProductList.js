@@ -1,27 +1,4 @@
-import { renderListWithTemplate, getLocalStorage, setLocalStorage, loadHeaderFooter } from "./utils.mjs";
-
-function productCardTemplate(product) {
-  return `
-    <li class="product-card">
-      <a href="/product_pages/?product=${product.Id}">
-        <img 
-          src="${product.Images.PrimarySmall}" 
-          srcset="
-            ${product.Images.PrimarySmall} 480w, 
-            ${product.Images.PrimaryMedium} 768w, 
-            ${product.Images.PrimaryLarge} 1200w" 
-          sizes="(max-width: 480px) 100vw, 
-                 (max-width: 768px) 50vw, 
-                 33vw" 
-          alt="${product.Name}">
-        <h3>${product.Brand.Name}</h3>
-        <p>${product.NameWithoutBrand}</p>
-        <p class="product-card__price">$${product.FinalPrice}</p>
-      </a>
-      <button class="add-to-cart-button" data-id="${product.Id}">Add to Cart</button>
-    </li>
-  `;
-}
+import { getLocalStorage, setLocalStorage } from "./utils.mjs";
 
 export default class ProductList {
   constructor(category, dataSource, listElement) {
@@ -31,58 +8,95 @@ export default class ProductList {
   }
 
   async init() {
-    const list = await this.dataSource.getData(this.category);
-    this.renderList(list);
-    document.querySelector(".title").textContent = this.category;
+    try {
+      // Fetch the product list from the data source
+      const products = await this.dataSource.getData(this.category);
 
-    // Add event listeners for "Add to Cart" buttons
+      // Render the product list
+      this.renderList(products);
+
+      // Update the page title with the category name
+      document.querySelector(".title").textContent = this.category;
+
+      // Add event listeners for "Add to Cart" buttons
+      this.addCartEventListeners(products);
+    } catch (error) {
+      console.error("Error loading products:", error);
+      this.listElement.innerHTML = `<p>Failed to load products. Please try again later.</p>`;
+    }
+  }
+
+  renderList(products) {
+    if (products.length === 0) {
+      this.listElement.innerHTML = `<p>No products found for this category.</p>`;
+      return;
+    }
+
+    this.listElement.innerHTML = products
+      .map(
+        (product) => `
+        <li class="product-card">
+          <a href="/product_pages/index.html?product=${product.Id}">
+            <img src="${product.Images.PrimarySmall}" alt="${product.Name}">
+            <h3>${product.Name}</h3>
+            <p>${product.Description}</p>
+            <p class="price">$${product.FinalPrice.toFixed(2)}</p>
+          </a>
+          <button class="add-to-cart-button" data-id="${product.Id}">Add to Cart</button>
+        </li>
+      `
+      )
+      .join("");
+  }
+
+  addCartEventListeners(products) {
+    // Add event listeners to all "Add to Cart" buttons
     document.querySelectorAll(".add-to-cart-button").forEach((button) => {
       button.addEventListener("click", (e) => {
         const productId = e.target.dataset.id;
-        const product = list.find((p) => p.Id === productId);
+        const product = products.find((p) => p.Id === productId);
         this.addProductToCart(product);
       });
     });
   }
 
-  renderList(list) {
-    renderListWithTemplate(productCardTemplate, this.listElement, list);
-  }
-
   addProductToCart(product) {
-    const cartItems = getLocalStorage("so-cart") || [];
-    const existingProduct = cartItems.find((item) => item.Id === product.Id);
-    const totalItems = cartItems.reduce((sum, item) => sum + item.Quantity, 0);
-    setLocalStorage("totalItemsInCart", totalItems + 1);
-    loadHeaderFooter();
+    // Get the current cart from localStorage
+    const cart = getLocalStorage("so-cart") || [];
+
+    // Check if the product is already in the cart
+    const existingProduct = cart.find((item) => item.Id === product.Id);
 
     if (existingProduct) {
-      existingProduct.Quantity = (existingProduct.Quantity || 1) + 1;
+      // If the product is already in the cart, increase its quantity
+      existingProduct.Quantity += 1;
     } else {
+      // If the product is not in the cart, add it with a quantity of 1
       product.Quantity = 1;
-      cartItems.push(product);
+      cart.push(product);
     }
 
-    setLocalStorage("so-cart", cartItems);
+    // Save the updated cart to localStorage
+    setLocalStorage("so-cart", cart);
 
+    // Show a notification
+    this.showAddToCartNotification();
+  }
+
+  showAddToCartNotification() {
     const notification = document.createElement("div");
     notification.textContent = "Product added to cart!";
     notification.style.position = "fixed";
     notification.style.top = "50px";
-    notification.style.right = "60px";
+    notification.style.right = "50px";
     notification.style.backgroundColor = "green";
     notification.style.color = "white";
     notification.style.padding = "10px";
     notification.style.borderRadius = "5px";
-    notification.style.transform = "rotateY(90deg)";
-    notification.style.transition = "transform 0.5s ease"
+    notification.style.zIndex = "1000";
 
-     
     document.body.appendChild(notification);
 
-    setTimeout(() => {
-       notification.style.transform = "rotateY(0deg)"; // Flip the card to show the front
-    }, 10);
     setTimeout(() => {
       notification.remove();
     }, 2000);

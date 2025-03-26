@@ -1,3 +1,7 @@
+import { loadHeaderFooter } from "./utils.mjs";
+
+// Load the header and footer
+loadHeaderFooter();
 import { getLocalStorage, setLocalStorage } from "./utils.mjs";
 
 const cartItemTemplate = (item, index) => {
