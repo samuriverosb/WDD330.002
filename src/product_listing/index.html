@@ -33,7 +33,18 @@
     </div>
     <main class="divider">
         <section class="products">
-            <h2>Top Products: <span class="title highlight"></span></h2>
+            <div class="sort-container">
+                <h2>Top Products: <span class="title highlight"></span></h2>
+
+                <div>
+                    <label for="sort-options">Sort by:</label>
+                    <select id="sort-options">
+                        <option value="default">Default</option>
+                        <option value="name">Name</option>
+                        <option value="price">Price</option>
+                    </select>
+                </div>
+            </div>
             <ul class="product-list"></ul>
         </section>
     </main>
