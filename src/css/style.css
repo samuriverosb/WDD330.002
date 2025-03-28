@@ -202,6 +202,7 @@ div.alert-container {
 
 .product-list {
   display: flex;
+  justify-content: center;
   flex-flow: row wrap;
   list-style-type: none;
   align-items: stretch;
@@ -210,6 +211,17 @@ div.alert-container {
 .product-list a {
   text-decoration: none;
   color: var(--dark-grey);
+}
+
+.sort-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sort-container select {
+  padding: 3px 0px;
+  width: 75px;
 }
 
 /* Styles for product lists */

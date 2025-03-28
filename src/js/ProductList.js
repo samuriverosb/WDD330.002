@@ -30,32 +30,49 @@ export default class ProductList {
     this.category = category;
     this.dataSource = dataSource;
     this.listElement = listElement;
+    this.products = [];
   }
 
   async init() {
-    const list = await this.dataSource.getData(this.category);
-    this.renderList(list);
+    this.products = await this.dataSource.getData(this.category);
+    this.renderList(this.products);
     document.querySelector(".title").textContent = this.category;
+
+    document.querySelector("#sort-options").addEventListener("change", (e) => {
+      this.sortProducts(e.target.value);
 
     // Add event listeners for "Add to Cart" buttons
     document.querySelectorAll(".add-to-cart-button").forEach((button) => {
       button.addEventListener("click", (e) => {
         const productId = e.target.dataset.id;
-        const product = list.find((p) => p.Id === productId);
+        const product = this.products.find((p) => p.Id === productId);
         this.addProductToCart(product);
       });
     });
+
     document.querySelectorAll(".preview").forEach((button) => {
       button.addEventListener("click", (e) => {
         const productId = e.target.dataset.id;
-        const product = list.find((p) => p.Id === productId);
+        const product = this.products.find((p) => p.Id === productId);
         this.renderModal(productId);
       });
+    });
     });
   }
 
   renderList(list) {
+    this.listElement.innerHTML = "";
     renderListWithTemplate(productCardTemplate, this.listElement, list);
+  }
+
+  sortProducts(criteria) {
+    let sortedList = [...this.products];
+    if (criteria === "name") {
+      sortedList.sort((a, b) => a.Name.localeCompare(b.Name));
+    } else if (criteria === "price") {
+      sortedList.sort((a, b) => a.FinalPrice - b.FinalPrice);
+    }
+    this.renderList(sortedList);
   }
 
   renderModal = (productId) => {
